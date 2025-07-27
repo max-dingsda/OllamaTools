@@ -46,8 +46,8 @@ Input:
 woman on a balcony, sunset, elegant
 ```
 
-Output:
-```text (deepseek example)
+Output: (deepseek example)
+```text 
 A refined woman in an elegant, flowing dress stands gracefully on a balcony overlooking a bustling city at sunset. The warm, golden hues of the horizon paint the sky with streaks of pink and orange as the sun dips below the horizon. She holds a shawl softly billowing in the evening breeze, her posture one of poise and serenity as she gazes out over the city lights beginning to twinkle in the distance.
 ```
 
