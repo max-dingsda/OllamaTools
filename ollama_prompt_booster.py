@@ -1,12 +1,12 @@
 import requests
-import re
+import json
 
 class OllamaPromptBooster:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "prompt": ("STRING", {"multiline": True, "default": ""}),
+                "prompt": ("STRING", {"multiline": True}),
                 "use_llm": (["yes", "no"], {"default": "yes"}),
                 "model": (
                     ["zephyr:7b-beta", "deepseek-r1:8b", "llama3.2:latest", "mistral:latest"],
@@ -18,88 +18,51 @@ class OllamaPromptBooster:
 
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("enhanced_prompt",)
-    FUNCTION = "boost_prompt"
-    CATEGORY = "Ollama"
+    FUNCTION = "boost"
+    CATEGORY = "OllamaTools"
 
-    CLASS_NAME = "Ollama Prompt Booster"
+    # 🎈 Tooltip-Infos für bessere Benutzerfreundlichkeit
+    UI_CONFIG = {
+        "prompt": {
+            "tooltip": "The original prompt you want to enhance. Can be simple or detailed."
+        },
+        "use_llm": {
+            "tooltip": "Choose 'yes' to let the LLM improve your prompt. 'No' returns your input unchanged."
+        },
+        "model": {
+            "tooltip": "Pick the LLM model used to boost your prompt. Some models are more verbose than others."
+        },
+        "cleanup_output": {
+            "tooltip": "Removes <think> tags or excessive commentary to keep only the usable prompt."
+        },
+    }
 
-    def boost_prompt(self, prompt, use_llm, model, cleanup_output):
+    def boost(self, prompt, use_llm, model, cleanup_output):
         if use_llm == "no":
             return (prompt,)
 
-        # Modellabhängiger Prompt
-        if model.startswith("deepseek"):
-            prompt_text = f"""Rewrite the following input prompt to make it more vivid and descriptive, suitable for a text-to-image AI model.
+        url = "http://localhost:11434/api/generate"
+        system_prompt = "Improve this prompt for a text-to-image model. Only return the enhanced version. No comments, no explanations."
 
-Do NOT explain anything.
-Do NOT analyze the input.
-Do NOT use tags like <think>.
-Do NOT describe your thinking process.
-JUST return the improved version of the input prompt.
-ONLY the prompt. Nothing else.
-
-Input:
-{prompt}
-"""
-        else:
-            prompt_text = f"""You are a prompt enhancer for AI-based image generation.
-
-Improve the following prompt to make it more vivid, descriptive and visually rich, suitable for a text-to-image model.
-
-Respond in the same language as the input.
-Return only the enhanced prompt. Do not include comments or explanations.
-
-Input:
-{prompt}
-"""
+        payload = {
+            "model": model,
+            "prompt": f"{system_prompt}\n\n{prompt}",
+            "stream": False
+        }
 
         try:
-            response = requests.post(
-                "http://localhost:11434/api/generate",
-                json={
-                    "model": model,
-                    "prompt": prompt_text,
-                    "stream": False
-                },
-                timeout=30
-            )
-
-            if response.status_code != 200:
-                return (f"[Fehler {response.status_code}] {response.text}",)
-
-            result = response.json().get("response", "").strip()
-
-            if cleanup_output == "yes":
-                result = self.clean_output(result)
-
-            return (result.strip(),)
-
+            response = requests.post(url, json=payload)
+            result = response.json()["response"]
         except Exception as e:
-            return (f"[Exception] {str(e)}",)
+            result = f"[ERROR contacting Ollama: {e}]"
 
-    def clean_output(self, text):
-        def remove_tag_block(t, tag):
-            return re.sub(rf"<{tag}>.*?</{tag}>", "", t, flags=re.DOTALL | re.IGNORECASE)
+        if cleanup_output == "yes":
+            result = self._cleanup_response(result)
 
-        for tag in ["think", "response", "answer"]:
-            text = remove_tag_block(text, tag)
+        return (result,)
 
-        for tag in ["<response>", "</response>", "<answer>", "</answer>"]:
-            text = text.replace(tag, "")
-
-        bad_prefixes = [
-            "Alright", "Let me", "Sure,", "Okay,", "So,", "I will", "First,", "To begin"
-        ]
-        for prefix in bad_prefixes:
-            if text.lower().startswith(prefix.lower()):
-                split = text.split("\n\n", 1)
-                if len(split) > 1:
-                    text = split[1].strip()
-                break
-
+    def _cleanup_response(self, text):
+        import re
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL | re.IGNORECASE)
+        text = text.strip().strip('"').strip()
         return text
-
-
-NODE_CLASS_MAPPINGS = {
-    "OllamaPromptBooster": OllamaPromptBooster
-}
