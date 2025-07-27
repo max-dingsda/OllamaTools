@@ -56,7 +56,7 @@ A refined woman in an elegant, flowing dress stands gracefully on a balcony over
 ### 🖼️ Pic Describer
 
 Given this image:  
-<img src="example_image/example_woman.png" alt="Input Image" style="width:25%;">
+<img src="example_image/Example_woman.png" alt="Input Image" style="width:25%;">
 
 Returns a prompt like:
 ```text
