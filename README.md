@@ -1,9 +1,9 @@
 # 🧠 OllamaTools for ComfyUI
 
-> *“To be honest, most LLM nodes in ComfyUI were just too complicated for me.  
+> *“To be honest, most LLM nodes in ComfyUI were just too complicated for me. Too many settings, too many possibilities.  
 > So I built the kind of tools I wish I had when I started.”*
 
-ComfyUI has powerful capabilities for working with local LLMs via [Ollama](https://ollama.com), but many existing nodes are complex, poorly documented, or difficult to use for newcomers, or to be honest, people like me
+ComfyUI has powerful capabilities for working with local LLMs via [Ollama](https://ollama.com), but many existing nodes are complex (meainig they provide more options than I can comprehend), poorly documented, or difficult to use for newcomers, or to be honest, people like me
 
 **This project makes local LLMs easy to use for prompt enhancement and image captioning –**  
 No API keys. No external tools. No headache.
@@ -56,12 +56,22 @@ A refined woman in an elegant, flowing dress stands gracefully on a balcony over
 ### 🖼️ Pic Describer
 
 Given this image:  
-*(Insert image of woman on a couch)*
+<img src="example_image/example_woman.png" alt="Input Image" style="width:25%;">
 
 Returns a prompt like:
 ```text
-A beautiful woman lounges barefoot on a white sofa, her shirt loose and airy, lit by soft studio lighting…
+The image captures a moment of casual elegance. A woman stands confidently against a stark white wall, her posture relaxed yet poised. Her attire is simple yet striking: a gray t-shirt that hints at comfort, paired with blue jeans that add a touch of sophistication to the ensemble.
+
+Her long hair cascades down, framing her face and adding a soft contrast to the image. She sports glasses, which give her an air of intellectualism. The glasses, along with her serious expression, suggest she's ready for whatever comes next.
+
+The lighting in the image is soft and diffused, casting gentle shadows that add depth to the scene. The white wall serves as a neutral backdrop, allowing the subject to take center stage. The simplicity of the background puts the focus entirely on the woman, highlighting her presence in the frame.
+
+Overall, the image exudes a sense of calm and readiness, as if the woman is preparing for an important event or meeting.
 ```
+Settings in PIC description node for the above result: 
+- model: llava
+- style: cinematic
+- prompt: Describe the image
 
 ---
 
