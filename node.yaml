@@ -1,0 +1,12 @@
+name: OllamaTools
+author: max-dingsda
+description: "Easy to use Ollama-based prompt and image caption nodes for ComfyUI\
+  \ \u2013 local, no API key required."
+repo: https://github.com/max-dingsda/OllamaTools
+version: 1.0.0
+tags:
+- ollama
+- local-llm
+- prompt
+- captioning
+- comfyui
