@@ -1,39 +1,30 @@
 import requests
-import json
+import re
 
 class OllamaPromptBooster:
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "prompt": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "tooltip": "The original prompt you want to enhance. Can be simple or detailed."
-                    }
-                ),
-                "use_llm": (
-                    "BOOLEAN",
-                    {
-                        "default": True,
-                        "tooltip": "Enable this to improve your prompt with the selected LLM."
-                    }
-                ),
+                "prompt": ("STRING", {
+                    "multiline": True,
+                    "tooltip": "The prompt you want to enhance using the selected local LLM."
+                }),
+                "use_llm": ("BOOLEAN", {
+                    "default": True,
+                    "tooltip": "If disabled, the prompt will pass through unchanged."
+                }),
                 "model": (
                     ["zephyr:7b-beta", "deepseek-r1:8b", "llama3.2:latest", "mistral:latest"],
                     {
                         "default": "zephyr:7b-beta",
-                        "tooltip": "Choose which LLM to use for prompt enhancement. Some are more verbose than others."
+                        "tooltip": "Choose which LLM to use for enhancement. No API key needed."
                     }
                 ),
-                "cleanup_output": (
-                    "BOOLEAN",
-                    {
-                        "default": True,
-                        "tooltip": "Removes unnecessary text like <think> tags or explanations from the LLM output."
-                    }
-                ),
+                "cleanup_output": ("BOOLEAN", {
+                    "default": True,
+                    "tooltip": "Remove extra formatting, <think> tags, or LLM commentary from output."
+                }),
             }
         }
 
@@ -41,37 +32,34 @@ class OllamaPromptBooster:
     RETURN_NAMES = ("enhanced_prompt",)
     FUNCTION = "boost"
     CATEGORY = "OllamaTools"
-    CLASS_NAME = "Ollama Prompt Booster"
+    CLASS_NAME = "🧠 Prompt Booster"
 
     def boost(self, prompt, use_llm, model, cleanup_output):
         if not use_llm:
             return (prompt,)
 
-        url = "http://localhost:11434/api/generate"
-        system_prompt = "Improve this prompt for a text-to-image model. Only return the enhanced version. No comments, no explanations."
+        base_instruction = "Improve this prompt for a text-to-image AI model. Focus on clarity and visual detail. Respond in english language."
 
         payload = {
             "model": model,
-            "prompt": f"{system_prompt}\n\n{prompt}",
+            "prompt": f"{base_instruction}\n\n{prompt}",
             "stream": False
         }
 
         try:
-            response = requests.post(url, json=payload)
-            result = response.json()["response"]
+            response = requests.post("http://localhost:11434/api/generate", json=payload)
+            result = response.json().get("response", "[No response]")
         except Exception as e:
             result = f"[ERROR contacting Ollama: {e}]"
 
         if cleanup_output:
-            result = self._cleanup_response(result)
+            result = self.clean_output(result)
 
         return (result,)
 
-    def _cleanup_response(self, text):
-        import re
+    def clean_output(self, text):
         text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL | re.IGNORECASE)
-        text = text.strip().strip('"').strip()
-        return text
+        return text.strip().strip('"').strip()
 
 NODE_CLASS_MAPPINGS = {
     "OllamaPromptBooster": OllamaPromptBooster

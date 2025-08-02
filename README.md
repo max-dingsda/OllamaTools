@@ -81,7 +81,7 @@ Settings in PIC description node for the above result:
 2. Clone this repo into your `ComfyUI/custom_nodes` folder:
 
 ```bash
-git clone https://github.com/YOURNAME/ComfyUI-OllamaTools.git
+git clone https://github.com/max-dingsda/OllamaTools.git
 ```
 
 3. (Optional) Install Python dependencies:
