@@ -38,7 +38,7 @@ class OllamaPromptBooster:
         if not use_llm:
             return (prompt,)
 
-        base_instruction = "Improve this prompt for a text-to-image AI model. Focus on clarity and visual detail. Respond in english language."
+        base_instruction = "Improve this prompt for a text-to-image AI model. Focus on clarity and visual detail. Respond in english language. Return only the improved prompt without additional information"
 
         payload = {
             "model": model,
