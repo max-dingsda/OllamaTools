@@ -15,12 +15,12 @@ class OllamaPromptBooster:
                     "tooltip": "If disabled, the prompt will pass through unchanged."
                 }),
                 "model": (
-                    ["zephyr:7b-beta", "deepseek-r1:8b", "llama3.2:latest", "mistral:latest"],
-                    {
-                        "default": "zephyr:7b-beta",
-                        "tooltip": "Choose which LLM to use for enhancement. No API key needed."
-                    }
-                ),
+                    ["zephyr:7b-beta", "deepseek-r1:8b", "llama3.2:latest", "mistral:latest", "gpt-oss:20b", "gpt-oss:120b"],
+                        {
+                            "default": "zephyr:7b-beta",
+                            "tooltip": "Choose which LLM to use for enhancement. No API key needed."
+                        }
+                        ),
                 "cleanup_output": ("BOOLEAN", {
                     "default": True,
                     "tooltip": "Remove extra formatting, <think> tags, or LLM commentary from output."
