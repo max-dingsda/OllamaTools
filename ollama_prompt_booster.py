@@ -15,7 +15,7 @@ class OllamaPromptBooster:
                     "tooltip": "If disabled, the prompt will pass through unchanged."
                 }),
                 "model": (
-                    ["zephyr:7b-beta", "deepseek-r1:8b", "llama3.2:latest", "mistral:latest", "gpt-oss:20b", "gpt-oss:120b"],
+                    ["zephyr:7b-beta", "deepseek-r1:8b", "llama3.2:latest", "mistral:latest", "gpt-oss:20b", "ministral-3:latest"],
                         {
                             "default": "zephyr:7b-beta",
                             "tooltip": "Choose which LLM to use for enhancement. No API key needed."
