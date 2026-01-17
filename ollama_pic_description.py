@@ -75,7 +75,9 @@ class OllamaPicDescriber:
             "model": model,
             "prompt": combined_prompt,
             "images": [img_b64],
-            "stream": False
+            "stream": False,
+            "keep_alive": "0s",
+            "options": {"num_ctx": 4096}
         }
 
         try:
