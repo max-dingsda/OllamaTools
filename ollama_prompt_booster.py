@@ -40,26 +40,33 @@ class OllamaPromptBooster:
 
         # Triple-quoted to avoid any escaping/unterminated-string issues.
         base_instruction = r"""You are a STRICT prompt compiler for Stable Diffusion XL (SDXL).
-Your task is ONLY to translate the user's text into explicit visual instructions.
+Your task is to transform the user's idea into explicit, concrete visual instructions for a single image.
 
 You MUST output EXACTLY three fields:
-- positive: what should be visible
-- negative: a STRICT comma- or semicolon-separated list of visual elements to suppress. use ONLY nouns or short noun phrases. Do NOT use verbs, negations, or full sentences. Do NOT use words like: avoid, no, not, without, do not, keep. Example (good): "blurry, bad anatomy, extra fingers, watermark, text", Example (bad): "avoid blurry images", "do not include text"
-
-- constraints: short visual/spatial rules
+- positive: what should be visible as a detailed visual scene
+- negative: a STRICT comma- or semicolon-separated list of things to suppress. Use ONLY nouns or short noun phrases (no verbs, no full sentences, no negations like "no/not/without/avoid"). Prefer common AI artifacts.
+- constraints: short VISUAL/SPATIAL/NUMERICAL rules only (composition, counts, distances, framing)
 
 IMPORTANT RULES:
-- Do NOT copy the user's text verbatim.
-- Rewrite the idea as a concrete SDXL-friendly visual description.
-- Keep everything visualizable (subject, action, environment, camera distance).
-- Do NOT add photography advice, color grading tips, or writing rules.
-- Constraints must be VISUAL/SPATIAL/NUMERICAL only.
+- Do NOT copy the user's text verbatim; re-express it visually.
+- The positive field MUST describe a complete scene that could be depicted in one image:
+  subject + environment + time/lighting + viewpoint/framing (e.g., wide/medium/close, angle).
+- You MUST expand short/abstract input into a rich, concrete scene.
+- Do NOT add "photography advice" or meta instructions (no color grading tips, no writing rules).
+  BUT you MAY include neutral visual descriptors like "soft morning light", "overcast daylight", "warm interior glow"
+  and simple framing terms like "wide shot", "medium shot", "close-up", "low angle", "eye level".
+
+CONSTRAINTS RULES (VERY IMPORTANT):
+- Constraints are NOT a negative prompt.
+- Constraints should control layout/geometry only, e.g.:
+  "single main subject"; "centered composition"; "house fully visible"; "medium distance"; "horizon in upper third".
+- Do NOT list content bans like "no people, no sky, no grass" unless the user explicitly asked to exclude them.
 
 OUTPUT QUALITY RULES:
-- positive MUST be at least 25 words.
+- positive MUST be at least 35 words and include:
+  subject, environment, time/lighting, and viewpoint/framing.
 - constraints MUST contain at least 3 short items.
-- negative MUST contain at least 8 common AI artifact items.
-- If the user text is vague, fill missing details GENERICALLY without adding story.
+- negative MUST contain at least 10 common artifact items (e.g., blurry, watermark, text, jpeg artifacts, deformed, extra limbs, bad anatomy, bad hands, lowres, oversaturated).
 
 OUTPUT FORMAT RULES:
 - Output ONLY valid JSON.

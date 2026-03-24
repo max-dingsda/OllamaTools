@@ -14,9 +14,9 @@ class OllamaPicDescriber:
                     "tooltip": "The image you want the LLM to describe. Usually from 'Load Image'."
                 }),
                 "model": (
-                    ["llava:latest", "moondream:latest", "qwen3-vl:latest"],
+                    ["llava:latest", "llama3.2-vision:latest", "ministral-3:latest", "qwen3-vl:2b", "gemma3:latest"],
                     {
-                        "default": "llava:latest",
+                        "default": "ministral-3:latest",
                         "tooltip": "Multimodal LLM used for describing the image."
                     }
                 ),
