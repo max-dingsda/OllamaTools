@@ -29,7 +29,7 @@ Documentation = "https://github.com/max-dingsda/OllamaTools/wiki"
 "Bug Tracker" = "https://github.com/max-dingsda/OllamaTools/issues"
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "max-dingsda"
 DisplayName = "OllamaTools"
 Icon = ""
 includes = [] 
